@@ -9,7 +9,7 @@
 
 void register_audio_node(nb::module_ &m) {
     // Bind the AudioNode base class
-    nb::class_<lab::AudioNode, std::shared_ptr<lab::AudioNode>>(m, "_AudioNode")
+    nb::class_<lab::AudioNode>(m, "_AudioNode", nb::is_holder_type<std::shared_ptr<lab::AudioNode>>())
         .def("connect", [](lab::AudioNode& node, 
                           std::shared_ptr<lab::AudioNode> destination,
                           unsigned int output = 0, 
