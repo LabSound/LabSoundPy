@@ -1,0 +1,21 @@
+# Include all C++ source files and headers
+recursive-include src *.cpp *.h *.hpp
+recursive-include third_party/nanobind *
+recursive-include third_party/LabSound *
+
+# Include CMake files
+include CMakeLists.txt
+recursive-include cmake *.cmake
+
+# Include documentation and examples
+recursive-include docs *
+recursive-include examples *.py
+
+# Include tests
+recursive-include tests *.py
+
+# Include license and readme
+include LICENSE
+include README.md
+include pyproject.toml
+include .gitmodules
