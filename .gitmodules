@@ -1,0 +1,7 @@
+[submodule "third_party/nanobind"]
+	path = third_party/nanobind
+	url = https://github.com/wjakob/nanobind.git
+
+[submodule "third_party/LabSound"]
+	path = third_party/LabSound
+	url = https://github.com/LabSound/LabSound.git
