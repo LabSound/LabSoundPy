@@ -9,7 +9,7 @@
 
 void register_stereo_panner_node(nb::module_ &m) {
     // Bind the StereoPannerNode class
-    nb::class_<lab::StereoPannerNode, lab::AudioNode, std::shared_ptr<lab::StereoPannerNode>>(m, "_StereoPannerNode")
+    nb::class_<lab::StereoPannerNode, lab::AudioNode>(m, "_StereoPannerNode", nb::is_holder_type<std::shared_ptr<lab::StereoPannerNode>>())
         .def("pan", [](lab::StereoPannerNode& node) {
             return node.pan();
         });

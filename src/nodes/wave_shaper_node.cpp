@@ -20,7 +20,7 @@ void register_wave_shaper_node(nb::module_ &m) {
         if (type_str == "none") return lab::OverSampleType::NONE;
         if (type_str == "2x") return lab::OverSampleType::X2;
         if (type_str == "4x") return lab::OverSampleType::X4;
-        throw nb::value_error("Invalid oversample type: " + type_str);
+        throw nb::value_error(("Invalid oversample type: " + type_str).c_str());
     };
     
     auto oversample_to_string = [](lab::OverSampleType type) {
@@ -33,8 +33,8 @@ void register_wave_shaper_node(nb::module_ &m) {
     };
     
     // Bind the WaveShaperNode class
-    nb::class_<lab::WaveShaperNode, lab::AudioNode, std::shared_ptr<lab::WaveShaperNode>>(m, "_WaveShaperNode")
-        .def("set_curve", [](lab::WaveShaperNode& node, nb::ndarray<nb::numpy, float, nb::shape<nb::any>> curve) {
+    nb::class_<lab::WaveShaperNode, lab::AudioNode>(m, "_WaveShaperNode", nb::is_holder_type<std::shared_ptr<lab::WaveShaperNode>>())
+        .def("set_curve", [](lab::WaveShaperNode& node, nb::ndarray<float> curve) {
             // Convert numpy array to std::vector
             std::vector<float> curve_vec(curve.data(), curve.data() + curve.size());
             node.setCurve(curve_vec.data(), curve_vec.size());
@@ -45,9 +45,7 @@ void register_wave_shaper_node(nb::module_ &m) {
             size_t curve_size = node.curveSize();
             
             // Create a numpy array from the data
-            return nb::ndarray<nb::numpy, float, nb::shape<nb::any>>(
-                curve_data, {curve_size}, {sizeof(float)}
-            );
+            return nb::ndarray<float>(curve_data, {curve_size});
         })
         .def("set_oversample", &lab::WaveShaperNode::setOversample, nb::arg("oversample"))
         .def("oversample", &lab::WaveShaperNode::oversample)

@@ -9,16 +9,16 @@
 #include <nanobind/stl/map.h>
 
 void register_biquad_filter_node(nb::module_ &m) {
-    // First, register the BiquadFilterType enum
-    nb::enum_<lab::BiquadFilterType>(m, "BiquadFilterType")
-        .value("LOWPASS", lab::BiquadFilterType::LOWPASS)
-        .value("HIGHPASS", lab::BiquadFilterType::HIGHPASS)
-        .value("BANDPASS", lab::BiquadFilterType::BANDPASS)
-        .value("LOWSHELF", lab::BiquadFilterType::LOWSHELF)
-        .value("HIGHSHELF", lab::BiquadFilterType::HIGHSHELF)
-        .value("PEAKING", lab::BiquadFilterType::PEAKING)
-        .value("NOTCH", lab::BiquadFilterType::NOTCH)
-        .value("ALLPASS", lab::BiquadFilterType::ALLPASS);
+    // First, register the BiquadFilterType enum (using the constants from AudioNode.h)
+    nb::enum_<int>(m, "BiquadFilterType")
+        .value("LOWPASS", lab::LOWPASS)
+        .value("HIGHPASS", lab::HIGHPASS)
+        .value("BANDPASS", lab::BANDPASS)
+        .value("LOWSHELF", lab::LOWSHELF)
+        .value("HIGHSHELF", lab::HIGHSHELF)
+        .value("PEAKING", lab::PEAKING)
+        .value("NOTCH", lab::NOTCH)
+        .value("ALLPASS", lab::ALLPASS);
     
     // Create a mapping from string to BiquadFilterType for Pythonic interface
     auto filter_type_from_string = [](const std::string& type_str) {
@@ -37,7 +37,7 @@ void register_biquad_filter_node(nb::module_ &m) {
         if (it != type_map.end()) {
             return it->second;
         }
-        throw nb::value_error("Invalid filter type: " + type_str);
+        throw nb::value_error(("Invalid filter type: " + type_str).c_str());
     };
     
     auto filter_type_to_string = [](lab::BiquadFilterType type) {
@@ -55,7 +55,7 @@ void register_biquad_filter_node(nb::module_ &m) {
     };
     
     // Bind the BiquadFilterNode class
-    nb::class_<lab::BiquadFilterNode, lab::AudioNode, std::shared_ptr<lab::BiquadFilterNode>>(m, "_BiquadFilterNode")
+    nb::class_<lab::BiquadFilterNode, lab::AudioNode>(m, "_BiquadFilterNode", nb::is_holder_type<std::shared_ptr<lab::BiquadFilterNode>>())
         .def("set_type", &lab::BiquadFilterNode::setType, nb::arg("type"))
         .def("type", &lab::BiquadFilterNode::type)
         .def("frequency", [](lab::BiquadFilterNode& node) {

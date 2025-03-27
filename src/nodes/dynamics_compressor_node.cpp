@@ -9,7 +9,7 @@
 
 void register_dynamics_compressor_node(nb::module_ &m) {
     // Bind the DynamicsCompressorNode class
-    nb::class_<lab::DynamicsCompressorNode, lab::AudioNode, std::shared_ptr<lab::DynamicsCompressorNode>>(m, "_DynamicsCompressorNode")
+    nb::class_<lab::DynamicsCompressorNode, lab::AudioNode>(m, "_DynamicsCompressorNode", nb::is_holder_type<std::shared_ptr<lab::DynamicsCompressorNode>>())
         .def("threshold", [](lab::DynamicsCompressorNode& node) {
             return node.threshold();
         })

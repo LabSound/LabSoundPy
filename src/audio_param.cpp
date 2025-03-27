@@ -9,7 +9,7 @@
 
 void register_audio_param(nb::module_ &m) {
     // Bind the AudioParam class
-    nb::class_<lab::AudioParam, std::shared_ptr<lab::AudioParam>>(m, "_AudioParam")
+    nb::class_<lab::AudioParam>(m, "_AudioParam")
         .def("value", &lab::AudioParam::value)
         .def("set_value", &lab::AudioParam::setValue, nb::arg("value"))
         .def("default_value", &lab::AudioParam::defaultValue)

@@ -31,7 +31,7 @@ void register_oscillator_node(nb::module_ &m) {
         if (it != type_map.end()) {
             return it->second;
         }
-        throw nb::value_error("Invalid oscillator type: " + type_str);
+        throw nb::value_error(("Invalid oscillator type: " + type_str).c_str());
     };
     
     auto oscillator_type_to_string = [](lab::OscillatorType type) {
@@ -46,7 +46,7 @@ void register_oscillator_node(nb::module_ &m) {
     };
     
     // Bind the OscillatorNode class
-    nb::class_<lab::OscillatorNode, lab::AudioNode, std::shared_ptr<lab::OscillatorNode>>(m, "_OscillatorNode")
+    nb::class_<lab::OscillatorNode, lab::AudioNode>(m, "_OscillatorNode", nb::is_holder_type<std::shared_ptr<lab::OscillatorNode>>())
         .def("start", &lab::OscillatorNode::start, nb::arg("when") = 0.0)
         .def("stop", &lab::OscillatorNode::stop, nb::arg("when") = 0.0)
         .def("set_type", &lab::OscillatorNode::setType, nb::arg("type"))

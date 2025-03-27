@@ -11,14 +11,12 @@
 
 void register_function_node(nb::module_ &m) {
     // Bind the FunctionNode class
-    nb::class_<lab::FunctionNode, lab::AudioScheduledSourceNode, std::shared_ptr<lab::FunctionNode>>(m, "_FunctionNode")
+    nb::class_<lab::FunctionNode, lab::AudioScheduledSourceNode>(m, "_FunctionNode", nb::is_holder_type<std::shared_ptr<lab::FunctionNode>>())
         .def("set_process_function", [](lab::FunctionNode& node, nb::function process_function) {
             // Create a lambda that will call the Python function
             node.setFunction([process_function](lab::ContextRenderLock& r, lab::FunctionNode* node, int channel, float* buffer, size_t frames) {
                 // Convert the buffer to a numpy array
-                auto array = nb::ndarray<nb::numpy, float, nb::shape<nb::any>>(
-                    buffer, {frames}, {sizeof(float)}
-                );
+                auto array = nb::ndarray<float>(buffer, {frames});
                 
                 // Call the Python function with the channel and buffer
                 process_function(channel, array);

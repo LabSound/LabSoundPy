@@ -9,7 +9,7 @@
 
 void register_constant_source_node(nb::module_ &m) {
     // Bind the ConstantSourceNode class
-    nb::class_<lab::ConstantSourceNode, lab::AudioScheduledSourceNode, std::shared_ptr<lab::ConstantSourceNode>>(m, "_ConstantSourceNode")
+    nb::class_<lab::ConstantSourceNode, lab::AudioScheduledSourceNode>(m, "_ConstantSourceNode", nb::is_holder_type<std::shared_ptr<lab::ConstantSourceNode>>())
         .def("offset", [](lab::ConstantSourceNode& node) {
             return node.offset();
         });

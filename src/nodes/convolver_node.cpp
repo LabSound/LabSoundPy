@@ -9,7 +9,7 @@
 
 void register_convolver_node(nb::module_ &m) {
     // Bind the ConvolverNode class
-    nb::class_<lab::ConvolverNode, lab::AudioScheduledSourceNode, std::shared_ptr<lab::ConvolverNode>>(m, "_ConvolverNode")
+    nb::class_<lab::ConvolverNode, lab::AudioNode>(m, "_ConvolverNode", nb::is_holder_type<std::shared_ptr<lab::ConvolverNode>>())
         .def("set_normalize", &lab::ConvolverNode::setNormalize, nb::arg("normalize"))
         .def("normalize", &lab::ConvolverNode::normalize)
         .def("set_impulse", [](lab::ConvolverNode& node, std::shared_ptr<lab::AudioBus> impulse) {

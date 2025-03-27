@@ -31,7 +31,7 @@ void register_panner_node(nb::module_ &m) {
         if (it != model_map.end()) {
             return it->second;
         }
-        throw nb::value_error("Invalid panning model: " + model_str);
+        throw nb::value_error(("Invalid panning model: " + model_str).c_str());
     };
     
     auto panning_model_to_string = [](lab::PanningModel model) {
@@ -54,7 +54,7 @@ void register_panner_node(nb::module_ &m) {
         if (it != model_map.end()) {
             return it->second;
         }
-        throw nb::value_error("Invalid distance model: " + model_str);
+        throw nb::value_error(("Invalid distance model: " + model_str).c_str());
     };
     
     auto distance_model_to_string = [](lab::DistanceModel model) {
@@ -67,7 +67,7 @@ void register_panner_node(nb::module_ &m) {
     };
     
     // Bind the PannerNode class
-    nb::class_<lab::PannerNode, lab::AudioNode, std::shared_ptr<lab::PannerNode>>(m, "_PannerNode")
+    nb::class_<lab::PannerNode, lab::AudioNode>(m, "_PannerNode", nb::is_holder_type<std::shared_ptr<lab::PannerNode>>())
         .def("set_position", &lab::PannerNode::setPosition, nb::arg("x"), nb::arg("y"), nb::arg("z"))
         .def("position_x", [](lab::PannerNode& node) { return node.positionX(); })
         .def("position_y", [](lab::PannerNode& node) { return node.positionY(); })

@@ -9,20 +9,18 @@
 
 void register_audio_context(nb::module_ &m) {
     // Bind the AudioContext class
-    nb::class_<lab::AudioContext, std::shared_ptr<lab::AudioContext>>(m, "_AudioContext")
-        .def(nb::init<float, unsigned int, unsigned int>(),
-             nb::arg("sample_rate") = 44100.0f,
-             nb::arg("channels") = 2,
-             nb::arg("frames_per_buffer") = 256)
-        .def("start", &lab::AudioContext::start)
-        .def("stop", &lab::AudioContext::stop)
+    nb::class_<lab::AudioContext>(m, "_AudioContext")
+        .def(nb::init<bool>(),
+             nb::arg("is_offline") = false)
+        .def("resume", &lab::AudioContext::resume)
+        .def("suspend", &lab::AudioContext::suspend)
         .def("current_time", &lab::AudioContext::currentTime)
-        .def("destination", &lab::AudioContext::destination)
+        .def("destinationNode", &lab::AudioContext::destinationNode)
         .def("connect", [](lab::AudioContext& ctx, 
                           std::shared_ptr<lab::AudioNode> source, 
                           std::shared_ptr<lab::AudioNode> destination,
-                          unsigned int output = 0, 
-                          unsigned int input = 0) {
+                          unsigned int output, 
+                          unsigned int input) {
             ctx.connect(source, destination, output, input);
         }, nb::arg("source"), nb::arg("destination"), nb::arg("output") = 0, nb::arg("input") = 0)
         .def("disconnect", [](lab::AudioContext& ctx, std::shared_ptr<lab::AudioNode> node) {

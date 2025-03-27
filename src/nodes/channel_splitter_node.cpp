@@ -9,6 +9,6 @@
 
 void register_channel_splitter_node(nb::module_ &m) {
     // Bind the ChannelSplitterNode class
-    nb::class_<lab::ChannelSplitterNode, lab::AudioNode, std::shared_ptr<lab::ChannelSplitterNode>>(m, "_ChannelSplitterNode")
+    nb::class_<lab::ChannelSplitterNode, lab::AudioNode>(m, "_ChannelSplitterNode", nb::is_holder_type<std::shared_ptr<lab::ChannelSplitterNode>>())
         .def("add_outputs", &lab::ChannelSplitterNode::addOutputs, nb::arg("count"));
 }

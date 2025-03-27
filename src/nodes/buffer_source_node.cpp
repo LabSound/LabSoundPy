@@ -9,7 +9,7 @@
 
 void register_buffer_source_node(nb::module_ &m) {
     // Bind the AudioBufferSourceNode class (SampledAudioNode in LabSound)
-    nb::class_<lab::SampledAudioNode, lab::AudioScheduledSourceNode, std::shared_ptr<lab::SampledAudioNode>>(m, "_AudioBufferSourceNode")
+    nb::class_<lab::SampledAudioNode, lab::AudioScheduledSourceNode>(m, "_AudioBufferSourceNode", nb::is_holder_type<std::shared_ptr<lab::SampledAudioNode>>())
         .def("playback_rate", [](lab::SampledAudioNode& node) {
             return node.playbackRate();
         })

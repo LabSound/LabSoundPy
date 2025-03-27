@@ -10,7 +10,7 @@
 
 void register_analyzer_node(nb::module_ &m) {
     // Bind the AnalyzerNode class
-    nb::class_<lab::AnalyserNode, lab::AudioNode, std::shared_ptr<lab::AnalyserNode>>(m, "_AnalyzerNode")
+    nb::class_<lab::AnalyserNode, lab::AudioNode>(m, "_AnalyzerNode", nb::is_holder_type<std::shared_ptr<lab::AnalyserNode>>())
         .def("set_fft_size", &lab::AnalyserNode::setFftSize, nb::arg("size"))
         .def("fft_size", &lab::AnalyserNode::fftSize)
         .def("frequency_bin_count", &lab::AnalyserNode::frequencyBinCount)
@@ -26,9 +26,7 @@ void register_analyzer_node(nb::module_ &m) {
             node.getFloatFrequencyData(data.data());
             
             // Create a numpy array from the data
-            return nb::ndarray<nb::numpy, float, nb::shape<nb::any>>(
-                data.data(), {size}, {sizeof(float)}
-            );
+            return nb::ndarray<float>(data.data(), {size});
         })
         .def("get_byte_frequency_data", [](lab::AnalyserNode& node, bool resample = false) {
             size_t size = node.frequencyBinCount();
@@ -36,9 +34,7 @@ void register_analyzer_node(nb::module_ &m) {
             node.getByteFrequencyData(data.data(), resample);
             
             // Create a numpy array from the data
-            return nb::ndarray<nb::numpy, uint8_t, nb::shape<nb::any>>(
-                data.data(), {size}, {sizeof(uint8_t)}
-            );
+            return nb::ndarray<uint8_t>(data.data(), {size});
         }, nb::arg("resample") = false)
         .def("get_float_time_domain_data", [](lab::AnalyserNode& node) {
             size_t size = node.fftSize();
@@ -46,9 +42,7 @@ void register_analyzer_node(nb::module_ &m) {
             node.getFloatTimeDomainData(data.data());
             
             // Create a numpy array from the data
-            return nb::ndarray<nb::numpy, float, nb::shape<nb::any>>(
-                data.data(), {size}, {sizeof(float)}
-            );
+            return nb::ndarray<float>(data.data(), {size});
         })
         .def("get_byte_time_domain_data", [](lab::AnalyserNode& node) {
             size_t size = node.fftSize();
@@ -56,8 +50,6 @@ void register_analyzer_node(nb::module_ &m) {
             node.getByteTimeDomainData(data.data());
             
             // Create a numpy array from the data
-            return nb::ndarray<nb::numpy, uint8_t, nb::shape<nb::any>>(
-                data.data(), {size}, {sizeof(uint8_t)}
-            );
+            return nb::ndarray<uint8_t>(data.data(), {size});
         });
 }
