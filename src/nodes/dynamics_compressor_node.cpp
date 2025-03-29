@@ -9,23 +9,11 @@
 
 void register_dynamics_compressor_node(nb::module_ &m) {
     // Bind the DynamicsCompressorNode class
-    nb::class_<lab::DynamicsCompressorNode, lab::AudioNode>(m, "_DynamicsCompressorNode", nb::is_holder_type<std::shared_ptr<lab::DynamicsCompressorNode>>())
-        .def("threshold", [](lab::DynamicsCompressorNode& node) {
-            return node.threshold();
-        })
-        .def("knee", [](lab::DynamicsCompressorNode& node) {
-            return node.knee();
-        })
-        .def("ratio", [](lab::DynamicsCompressorNode& node) {
-            return node.ratio();
-        })
-        .def("attack", [](lab::DynamicsCompressorNode& node) {
-            return node.attack();
-        })
-        .def("release", [](lab::DynamicsCompressorNode& node) {
-            return node.release();
-        })
-        .def("reduction", [](lab::DynamicsCompressorNode& node) {
-            return node.reduction();
-        });
+    nb::class_<lab::DynamicsCompressorNode, lab::AudioNode>(m, "_DynamicsCompressorNode")
+        .def("threshold", &lab::DynamicsCompressorNode::threshold)
+        .def("knee", &lab::DynamicsCompressorNode::knee)
+        .def("ratio", &lab::DynamicsCompressorNode::ratio)
+        .def("attack", &lab::DynamicsCompressorNode::attack)
+        .def("release", &lab::DynamicsCompressorNode::release)
+        .def("reduction", &lab::DynamicsCompressorNode::reduction);
 }

@@ -8,73 +8,54 @@
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/map.h>
 
+// Define an enum type for BiquadFilterType
+enum class BiquadFilterType {
+    LOWPASS = lab::LOWPASS,
+    HIGHPASS = lab::HIGHPASS,
+    BANDPASS = lab::BANDPASS,
+    LOWSHELF = lab::LOWSHELF,
+    HIGHSHELF = lab::HIGHSHELF,
+    PEAKING = lab::PEAKING,
+    NOTCH = lab::NOTCH,
+    ALLPASS = lab::ALLPASS
+};
+
 void register_biquad_filter_node(nb::module_ &m) {
-    // First, register the BiquadFilterType enum (using the constants from AudioNode.h)
-    nb::enum_<int>(m, "BiquadFilterType")
-        .value("LOWPASS", lab::LOWPASS)
-        .value("HIGHPASS", lab::HIGHPASS)
-        .value("BANDPASS", lab::BANDPASS)
-        .value("LOWSHELF", lab::LOWSHELF)
-        .value("HIGHSHELF", lab::HIGHSHELF)
-        .value("PEAKING", lab::PEAKING)
-        .value("NOTCH", lab::NOTCH)
-        .value("ALLPASS", lab::ALLPASS);
-    
-    // Create a mapping from string to BiquadFilterType for Pythonic interface
-    auto filter_type_from_string = [](const std::string& type_str) {
-        static const std::map<std::string, lab::BiquadFilterType> type_map = {
-            {"lowpass", lab::BiquadFilterType::LOWPASS},
-            {"highpass", lab::BiquadFilterType::HIGHPASS},
-            {"bandpass", lab::BiquadFilterType::BANDPASS},
-            {"lowshelf", lab::BiquadFilterType::LOWSHELF},
-            {"highshelf", lab::BiquadFilterType::HIGHSHELF},
-            {"peaking", lab::BiquadFilterType::PEAKING},
-            {"notch", lab::BiquadFilterType::NOTCH},
-            {"allpass", lab::BiquadFilterType::ALLPASS}
+    // Enum for filter type
+    nb::enum_<BiquadFilterType>(m, "BiquadFilterType")
+        .value("LOWPASS", BiquadFilterType::LOWPASS)
+        .value("HIGHPASS", BiquadFilterType::HIGHPASS)
+        .value("BANDPASS", BiquadFilterType::BANDPASS)
+        .value("LOWSHELF", BiquadFilterType::LOWSHELF)
+        .value("HIGHSHELF", BiquadFilterType::HIGHSHELF)
+        .value("PEAKING", BiquadFilterType::PEAKING)
+        .value("NOTCH", BiquadFilterType::NOTCH)
+        .value("ALLPASS", BiquadFilterType::ALLPASS);
+
+    // Helper function to convert string to filter type
+    m.def("biquad_filter_type_from_string", [](const std::string& type) {
+        static const std::map<std::string, int> type_map = {
+            {"lowpass", lab::LOWPASS},
+            {"highpass", lab::HIGHPASS},
+            {"bandpass", lab::BANDPASS},
+            {"lowshelf", lab::LOWSHELF},
+            {"highshelf", lab::HIGHSHELF},
+            {"peaking", lab::PEAKING},
+            {"notch", lab::NOTCH},
+            {"allpass", lab::ALLPASS}
         };
-        
-        auto it = type_map.find(type_str);
+
+        auto it = type_map.find(type);
         if (it != type_map.end()) {
             return it->second;
         }
-        throw nb::value_error(("Invalid filter type: " + type_str).c_str());
-    };
-    
-    auto filter_type_to_string = [](lab::BiquadFilterType type) {
-        switch (type) {
-            case lab::BiquadFilterType::LOWPASS: return "lowpass";
-            case lab::BiquadFilterType::HIGHPASS: return "highpass";
-            case lab::BiquadFilterType::BANDPASS: return "bandpass";
-            case lab::BiquadFilterType::LOWSHELF: return "lowshelf";
-            case lab::BiquadFilterType::HIGHSHELF: return "highshelf";
-            case lab::BiquadFilterType::PEAKING: return "peaking";
-            case lab::BiquadFilterType::NOTCH: return "notch";
-            case lab::BiquadFilterType::ALLPASS: return "allpass";
-            default: return "unknown";
-        }
-    };
-    
+        throw std::runtime_error("Invalid filter type: " + type);
+    });
+
     // Bind the BiquadFilterNode class
-    nb::class_<lab::BiquadFilterNode, lab::AudioNode>(m, "_BiquadFilterNode", nb::is_holder_type<std::shared_ptr<lab::BiquadFilterNode>>())
-        .def("set_type", &lab::BiquadFilterNode::setType, nb::arg("type"))
-        .def("type", &lab::BiquadFilterNode::type)
-        .def("frequency", [](lab::BiquadFilterNode& node) {
-            return node.frequency();
-        })
-        .def("q", [](lab::BiquadFilterNode& node) {
-            return node.q();
-        })
-        .def("gain", [](lab::BiquadFilterNode& node) {
-            return node.gain();
-        })
-        .def("detune", [](lab::BiquadFilterNode& node) {
-            return node.detune();
-        })
-        // Add Pythonic interface for type
-        .def("set_type_string", [filter_type_from_string](lab::BiquadFilterNode& node, const std::string& type_str) {
-            node.setType(filter_type_from_string(type_str));
-        }, nb::arg("type"))
-        .def("type_string", [filter_type_to_string](lab::BiquadFilterNode& node) {
-            return filter_type_to_string(node.type());
-        });
+    nb::class_<lab::BiquadFilterNode, lab::AudioNode>(m, "_BiquadFilterNode")
+        .def("frequency", &lab::BiquadFilterNode::frequency)
+        .def("gain", &lab::BiquadFilterNode::gain)
+        .def("detune", &lab::BiquadFilterNode::detune)
+        .def("set_type", &lab::BiquadFilterNode::setType, nb::arg("type"));
 }

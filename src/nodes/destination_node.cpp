@@ -9,7 +9,6 @@
 
 void register_destination_node(nb::module_ &m) {
     // Bind the AudioDestinationNode class
-    nb::class_<lab::AudioDestinationNode, lab::AudioNode>(m, "_AudioDestinationNode", nb::is_holder_type<std::shared_ptr<lab::AudioDestinationNode>>())
-        .def("max_channel_count", &lab::AudioDestinationNode::maxChannelCount)
-        .def("set_channel_count", &lab::AudioDestinationNode::setChannelCount, nb::arg("count"));
+    nb::class_<lab::AudioDestinationNode, lab::AudioNode>(m, "_AudioDestinationNode")
+        .def("channel_count", &lab::AudioDestinationNode::channelCount);
 }

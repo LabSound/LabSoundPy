@@ -15,10 +15,10 @@ void register_panner_node(nb::module_ &m) {
         .value("HRTF", lab::PanningModel::HRTF);
     
     // Register the DistanceModel enum
-    nb::enum_<lab::DistanceModel>(m, "DistanceModel")
-        .value("LINEAR", lab::DistanceModel::LINEAR)
-        .value("INVERSE", lab::DistanceModel::INVERSE)
-        .value("EXPONENTIAL", lab::DistanceModel::EXPONENTIAL);
+    nb::enum_<lab::PannerNode::DistanceModel>(m, "DistanceModel")
+        .value("LINEAR", lab::PannerNode::LINEAR_DISTANCE)
+        .value("INVERSE", lab::PannerNode::INVERSE_DISTANCE)
+        .value("EXPONENTIAL", lab::PannerNode::EXPONENTIAL_DISTANCE);
     
     // Create a mapping from string to PanningModel for Pythonic interface
     auto panning_model_from_string = [](const std::string& model_str) {
@@ -44,10 +44,10 @@ void register_panner_node(nb::module_ &m) {
     
     // Create a mapping from string to DistanceModel for Pythonic interface
     auto distance_model_from_string = [](const std::string& model_str) {
-        static const std::map<std::string, lab::DistanceModel> model_map = {
-            {"linear", lab::DistanceModel::LINEAR},
-            {"inverse", lab::DistanceModel::INVERSE},
-            {"exponential", lab::DistanceModel::EXPONENTIAL}
+        static const std::map<std::string, int> model_map = {
+            {"linear", 0},
+            {"inverse", 1},
+            {"exponential", 2}
         };
         
         auto it = model_map.find(model_str);
@@ -57,26 +57,33 @@ void register_panner_node(nb::module_ &m) {
         throw nb::value_error(("Invalid distance model: " + model_str).c_str());
     };
     
-    auto distance_model_to_string = [](lab::DistanceModel model) {
+    auto distance_model_to_string = [](int model) {
         switch (model) {
-            case lab::DistanceModel::LINEAR: return "linear";
-            case lab::DistanceModel::INVERSE: return "inverse";
-            case lab::DistanceModel::EXPONENTIAL: return "exponential";
+            case 0: return "linear";
+            case 1: return "inverse";
+            case 2: return "exponential";
             default: return "unknown";
         }
     };
     
     // Bind the PannerNode class
-    nb::class_<lab::PannerNode, lab::AudioNode>(m, "_PannerNode", nb::is_holder_type<std::shared_ptr<lab::PannerNode>>())
-        .def("set_position", &lab::PannerNode::setPosition, nb::arg("x"), nb::arg("y"), nb::arg("z"))
+    nb::class_<lab::PannerNode, lab::AudioNode>(m, "_PannerNode")
+        .def("set_position", [](lab::PannerNode &self, float x, float y, float z) {
+            self.setPosition(x, y, z);
+        }, nb::arg("x"), nb::arg("y"), nb::arg("z"))
         .def("position_x", [](lab::PannerNode& node) { return node.positionX(); })
         .def("position_y", [](lab::PannerNode& node) { return node.positionY(); })
         .def("position_z", [](lab::PannerNode& node) { return node.positionZ(); })
-        .def("set_orientation", &lab::PannerNode::setOrientation, nb::arg("x"), nb::arg("y"), nb::arg("z"))
+        .def("set_orientation", [](lab::PannerNode &self, float x, float y, float z) {
+            lab::FloatPoint3D orientation(x, y, z);
+            self.setOrientation(orientation);
+        }, nb::arg("x"), nb::arg("y"), nb::arg("z"))
         .def("orientation_x", [](lab::PannerNode& node) { return node.orientationX(); })
         .def("orientation_y", [](lab::PannerNode& node) { return node.orientationY(); })
         .def("orientation_z", [](lab::PannerNode& node) { return node.orientationZ(); })
-        .def("set_velocity", &lab::PannerNode::setVelocity, nb::arg("x"), nb::arg("y"), nb::arg("z"))
+        .def("set_velocity", [](lab::PannerNode &self, float x, float y, float z) {
+            self.setVelocity(x, y, z);
+        }, nb::arg("x"), nb::arg("y"), nb::arg("z"))
         .def("velocity_x", [](lab::PannerNode& node) { return node.velocityX(); })
         .def("velocity_y", [](lab::PannerNode& node) { return node.velocityY(); })
         .def("velocity_z", [](lab::PannerNode& node) { return node.velocityZ(); })
@@ -106,9 +113,9 @@ void register_panner_node(nb::module_ &m) {
             return panning_model_to_string(node.panningModel());
         })
         .def("set_distance_model_string", [distance_model_from_string](lab::PannerNode& node, const std::string& model_str) {
-            node.setDistanceModel(distance_model_from_string(model_str));
+            node.setDistanceModel(static_cast<lab::PannerNode::DistanceModel>(distance_model_from_string(model_str)));
         }, nb::arg("model"))
         .def("distance_model_string", [distance_model_to_string](lab::PannerNode& node) {
-            return distance_model_to_string(node.distanceModel());
+            return distance_model_to_string(static_cast<int>(node.distanceModel()));
         });
 }

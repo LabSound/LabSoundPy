@@ -9,8 +9,8 @@
 
 void register_constant_source_node(nb::module_ &m) {
     // Bind the ConstantSourceNode class
-    nb::class_<lab::ConstantSourceNode, lab::AudioScheduledSourceNode>(m, "_ConstantSourceNode", nb::is_holder_type<std::shared_ptr<lab::ConstantSourceNode>>())
-        .def("offset", [](lab::ConstantSourceNode& node) {
-            return node.offset();
-        });
+    nb::class_<lab::ConstantSourceNode, lab::AudioNode>(m, "_ConstantSourceNode")
+        .def("offset", &lab::ConstantSourceNode::offset)
+        .def("start", &lab::ConstantSourceNode::start, nb::arg("when") = 0.0)
+        .def("stop", &lab::ConstantSourceNode::stop, nb::arg("when") = 0.0);
 }

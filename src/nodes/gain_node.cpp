@@ -9,8 +9,6 @@
 
 void register_gain_node(nb::module_ &m) {
     // Bind the GainNode class
-    nb::class_<lab::GainNode, lab::AudioNode>(m, "_GainNode", nb::is_holder_type<std::shared_ptr<lab::GainNode>>())
-        .def("gain", [](lab::GainNode& node) {
-            return node.gain();
-        });
+    nb::class_<lab::GainNode, lab::AudioNode>(m, "_GainNode")
+        .def("gain", &lab::GainNode::gain);
 }
