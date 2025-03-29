@@ -2,6 +2,9 @@
 
 Python bindings for the LabSound audio engine.
 
+This project is very much work in progress and does not yet compile. It's published in case anyone wants to pitch in to help write it.
+
+
 ## Overview
 
 LabSoundPy provides a Pythonic interface to LabSound's audio processing capabilities, making it as simple and intuitive to use as JavaScript-based Web Audio API while leveraging Python's strengths and ecosystem.
