@@ -95,6 +95,49 @@ This document tracks the status of the LabSoundPy project, which aims to create 
   - [x] Fix nanobind template parameter syntax for inheritance
   - [x] Fix method bindings to match LabSound API
 
+## Node Implementation Status
+
+### WebAudio Public API Nodes
+
+- [ ] AnalyserNode (In Progress)
+- [ ] AudioBasicInspectorNode
+- [ ] AudioBasicProcessorNode
+- [ ] AudioHardwareInputNode
+- [ ] AudioScheduledSourceNode
+- [ ] BiquadFilterNode (In Progress)
+- [ ] ChannelMergerNode (In Progress)
+- [ ] ChannelSplitterNode (In Progress)
+- [ ] ConvolverNode (In Progress)
+- [ ] DelayNode (In Progress)
+- [ ] DynamicsCompressorNode (In Progress)
+- [ ] GainNode (In Progress)
+- [ ] OscillatorNode (In Progress)
+- [ ] PannerNode (In Progress)
+- [ ] SampledAudioNode (In Progress)
+- [ ] StereoPannerNode (In Progress)
+- [ ] WaveShaperNode (In Progress)
+- [ ] ConstantSourceNode (In Progress)
+
+### LabSound Extended Public API Nodes
+
+- [ ] ADSRNode
+- [ ] BPMDelayNode
+- [ ] ClipNode
+- [ ] DiodeNode
+- [ ] FunctionNode (In Progress)
+- [ ] GranulationNode
+- [ ] NoiseNode
+- [ ] PeakCompNode
+- [ ] PingPongDelayNode
+- [ ] PolyBLEPNode
+- [ ] PowerMonitorNode
+- [ ] PWMNode
+- [ ] RecorderNode
+- [ ] SfxrNode
+- [ ] SpatializationNode
+- [ ] SpectralMonitorNode
+- [ ] SupersawNode
+
 ## Testing
 
 - [ ] Build and install the package

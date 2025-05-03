@@ -72,6 +72,8 @@ LabSoundPy supports the following node types:
 - **StereoPannerNode**: For simple stereo panning
 - **WaveShaperNode**: For non-linear distortion effects
 
+It's intended that all LabSound nodes will be wrapped. Please see STATUS.md for details.
+
 ## Examples
 
 ### Spatial Audio
@@ -214,3 +216,4 @@ LabSoundPy is licensed under the same license as LabSound. See the [LICENSE](LIC
 ## Acknowledgements
 
 LabSoundPy is built on top of [LabSound](https://github.com/LabSound/LabSound), a C++ audio engine.
+
